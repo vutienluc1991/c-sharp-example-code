@@ -1,0 +1,15 @@
+Create nestjs  projects that support websocket, api, swagger, axios, using sqlite as local database. It will have these modules:
+- Websocket module for devices to connect with device login endpoint will generate base64 string based on deviceId, deviceName, deviceIPAddress has onMessage to handle data
+- Service to Service module has API endpoints for another service to call to for"
+	+ Sending signal to device with payload is JSON object contains: deviceId, command endpoint called "send-command" with POST method, it will then store the query onto sqlite database with pending status, send the command to mapped device via websocket to execute command and get back result from  device to process after that return to service that called
+	+ Endpoint called "get-device-status" with GET method, query params is deviceId to get information about the device
+	
+- Setup module: 
+	+ Has an endpoint called "setup-device" with POST method, will pass the parameter deviceId and  process to call to device setup command via websocket,  it will then store and temporarily variable to lock the system so that the device setup will run to the end without interruption or else it will timed out after 30 mins	
+
+- Console module that run the while loop when start:
+	+ Calling to endpoint service named "retrieve-sms-to-send" in order to getting a list of message and phonenumber for this service to call to devices for sending message, Store it on a array named messageArr
+	+ Send message signaling send sms to device via websocket which specifics: message, port
+	+ Function to send command to change channel from 1 to 32 with command "AT-SWIT-0000-00XX" with ranging from 01 to 32
+	+ Function to send command to setup sim again
+	+ Function to get status of sim also retrieve sim number, port, sim signal status
